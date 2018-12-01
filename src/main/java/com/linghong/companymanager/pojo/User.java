@@ -31,7 +31,7 @@ public class User implements Serializable {
     private String businessTarget;
     private Boolean auth;//是否被认证
     private Company fromCompany;
-    private String openId;
+    private OpenUser openUser;
     private Date createTime;
 
     @Id
@@ -176,14 +176,15 @@ public class User implements Serializable {
         this.fromCompany = fromCompany;
     }
 
-    public String getOpenId() {
-        return openId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "openUserId")
+    public OpenUser getOpenUser() {
+        return openUser;
     }
 
-    public void setOpenId(String openId) {
-        this.openId = openId;
+    public void setOpenUser(OpenUser openUser) {
+        this.openUser = openUser;
     }
-
 
     public Date getCreateTime() {
         return createTime;
