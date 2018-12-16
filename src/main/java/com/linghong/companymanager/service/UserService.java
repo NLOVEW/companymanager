@@ -2,6 +2,7 @@ package com.linghong.companymanager.service;
 
 import com.linghong.companymanager.constant.UrlConstant;
 import com.linghong.companymanager.pojo.Company;
+import com.linghong.companymanager.pojo.CreateUser;
 import com.linghong.companymanager.pojo.User;
 import com.linghong.companymanager.pojo.Wallet;
 import com.linghong.companymanager.repository.CompanyRepository;
@@ -35,6 +36,8 @@ public class UserService {
     private UserRepository userRepository;
     @Resource
     private CompanyRepository companyRepository;
+    @Resource
+    private IMServiceImpl imServiceImpl;
 
     public User register(User user) {
         User register = userRepository.findByMobilePhone(user.getMobilePhone());
@@ -48,15 +51,29 @@ public class UserService {
             user.setStatus(true);
             user.setCreateTime(new Date());
             user = userRepository.save(user);
-            Subject subject = SecurityUtils.getSubject();
+           // Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getMobilePhone(),user.getPassword());
             token.setRememberMe(true);
-            subject.login(token);
+            //subject.login(token);
             Wallet wallet = new Wallet();
             wallet.setUser(user);
             wallet.setCreateTime(new Date());
             wallet.setWalletId(IDUtil.getId());
             wallet.setBalance(new BigDecimal(0));
+            String mobilePhone = user.getMobilePhone();
+            new Thread(
+                    ()->{
+                        try {
+                            //注册即时通信
+                            CreateUser createUser = new CreateUser();
+                            //使用手机号当唯一值
+                            createUser.setAccid(mobilePhone);
+                            imServiceImpl.createUser(createUser);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+            ).start();
             return user;
         }
         return null;
@@ -83,19 +100,31 @@ public class UserService {
         return user;
     }
 
-    public User perfectUserMessage(User user,Long companyId,User sessionUser) {
+    public User perfectUserMessage(User user,
+                                   Long companyId,
+                                   String idCardImage,
+                                   String avatarImage,
+                                   User sessionUser) {
         Company company = companyRepository.findById(companyId).get();
         sessionUser = userRepository.findByMobilePhone(sessionUser.getMobilePhone());
         BeanUtil.copyPropertiesIgnoreNull(sessionUser, user);
         user.setFromCompany(company);
+        user.setIdCardPath(UrlConstant.IMAGE_URL+new FastDfsUtil().uploadBase64Image(idCardImage));
+        if (avatarImage != null){
+            user.setAvatar(UrlConstant.IMAGE_URL+new FastDfsUtil().uploadBase64Image(avatarImage));
+        }
         userRepository.save(user);
         return user;
     }
 
     public User uploadAvatar(String base64Image, User user) {
+        logger.info("base64:{}",base64Image);
         String url = UrlConstant.IMAGE_URL+new FastDfsUtil().uploadBase64Image(base64Image);
+        logger.info("url:"+url);
         user = userRepository.findByMobilePhone(user.getMobilePhone());
         user.setAvatar(url);
+        user = userRepository.save(user);
+        logger.info("user:{}",user.toString());
         return user;
     }
 
@@ -112,5 +141,12 @@ public class UserService {
         User user = userRepository.findById(userId).get();
         user.setBusinessTarget(target);
         return true;
+    }
+
+    public User updateMessage(User user, User sessionUser) {
+        sessionUser = userRepository.findById(sessionUser.getUserId()).get();
+        BeanUtil.copyPropertiesIgnoreNull(user,sessionUser );
+        userRepository.save(sessionUser);
+        return sessionUser;
     }
 }

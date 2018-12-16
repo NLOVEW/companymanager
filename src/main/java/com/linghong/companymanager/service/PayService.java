@@ -60,17 +60,15 @@ public class PayService {
     @PostConstruct
     public void init() {
         //todo 上线时 修改所有信息 支付宝配置文件-----------------------------------
-        aliPayConfig.setPid("2088102175938099");
-        aliPayConfig.setAppId("2016091600527218");
-        aliPayConfig.setKeyPublic("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArp1iacBfaj6BopBsp7HesXIcX4CRrkFIRcayABGcaa3rTITBJlTRwdRU0osw2lcLGELrCcuxQ/NlqEA65iIBxbWoToM5TCgKUIjR3tDVRxoEGLCcxRdQjD90OAD5McqlXEfZtBQXbn57Ao6hr5AvLy+d8dEDnkclu3ASojqkOeoA6jqscNonfaY+w19yGBdovb1xwv+9E1bPj888T8OgZsJB/rRRKME/DdoH5q44F8uDnQFdkGlP5OU8+OmYzgJORvdZW1CSRchThI6uP2KXqatU3DhehHrxIwd20J//H1FtSCbxFmyHtjWakVZtOJsSsbzX+gttz56Ww2/qH1jFLQIDAQAB");
-        aliPayConfig.setKeyPrivate("MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCSUM9YjT3D9CKxRI3YBCNzz8CqLL5T753dPKyMT6136o5o9sLTVUmc2y5+Umrh/heCSwKbmkwnaVQ1XMMnLE8al4hl3zE7DwWvBkOUE5gdR3KRz1TwWo6FQ/FANQSH+ymbO7nlTurfrGfeDnamBf8i3EXQfVjpRLT/gVOyZ1mfi44hdwX02LH0eGvqpPrSpgXi7mbiUazERDwBJVWhQKts1lGhE7MMWdU9yyQWD5gAMkTmsDtqEnWrguP7ebzuyqNSadw4wi1wONp/nba7a1CHnqDA6uIU4t5DqwS0IQHX00Wt+1lsEaru7RqQQoBQTGi8sat/G4GjYhZgKeXmz06hAgMBAAECggEATjM4jrh2gYuzGxFryj9z/0rTS2C8nLndosfx5NAVA5luYbU5LaBQxq/yqns8OusF/5I9o5KVDx9hbV/VwdMRuEGzGddvRYRi4kezyKmsTEHKfxnT6N5Ne/ZzM4DimhboBtqmIWPLbp6DqRAL4/Iiiaw2+BZ2db5OCp1BcYGBSh6KdhQrDccCHTaq0nKmaGj42xunSmz5Ij42gYfIdllAmsxb5cQB4K7t1VtuFlcKFxC5APn7OcbRR6Q9JMzP8BZL3qt3otccz3gQ2eLCHaJIv3yhjJ4YIWMcxPh1VycCPaJLHwKdK9sfL3Aa7q4KUj4wnEweFHdQve2GNxT+JKSHDQKBgQDGp7029tzqWAOnh3gN/zAHIFpxbRA35BiEwZOlQgv8loj78K30OmGQx9c9Yq/hRJhl2yVccQgXbWqFcjMtCbI2PvloNWGuu7BuaNUcFzpHRcDJPSKPn4Jq9buHQxvMP9h6ikY2mjN7JZTkW+o0w7Z/oi73ICJtNqXMlahfis1TPwKBgQC8jUWXwPaRyAZKE4tYuSAFhvyhXxgMiSxj2ek3pY25fEZBPvBOKr32artm7r24x0n4/jRMb6q2TvPT3nVPY7dNQRvJnfxkFTZslhplJ2D8Q6HrAU+mnxIhOkumV/EbkffSGFg0ijJ6HIHvISNScGvwJUGai5bhGCaMMWcjlBFGHwKBgHYHT1qKzbLGXFV7HY9jYQu640GlBQ/QC+lEgg6b8Tc/0V+vHguPbExzD6U/LzRuZwWNcOM9nQseTT3AHjvSGPo17EVIAiOpDChtTMEF4/BYtzRZiGFA6mHWYnb5Hlj6TgpwgUsLzy6Jo68SFVMIPTQUDkdx5kJxR40IFiO9+kRNAoGBAITd8Fp9ycL09ymgGCPPYHdEpiV5A1NiHnvGhQeHjBVXM5KqrWAH0pEgqSphtiPNm5zwVR4/2kZZ4Iw+SOBG3lZ8OP6ca8yC/jUKmVMKqtdZOXKHG//IPFhZ4hE4C1loRQAx04ZClEtkZ1OBQIjJW+Z/+njTQOEhyZglAA8cOgf1AoGBAJjxSvMr3K0BSkg9s2efsmwy/BW9khOJ+3OKlLdKz7WnPb7LTdky2SQbUGruT+vlDscCLwnV3YHu1JK3RD0RGciiVOEMit5RzTNpX63JtWrhw+CSA2SeWFlpzF7Vis2M9S1+W0EjWm/HzAhncBDPA2H47SyuWq2Guu9RdsFxJOJX");
+        aliPayConfig.setPid("2088331023996895");
+        aliPayConfig.setAppId("2018102461775492");
+        aliPayConfig.setKeyPublic("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvdeVq5T74nKjZSbZ6hFblv3sNvHJYJ6/FIkE93yIYDV5LZDaKe8Am0up0R4nmMoUFU1CQW2dQt91VLJjOvZaEnvyfOwqTRcPoPFhNgs+ruhtUc6AFr9C0Kff/MqkD1c/S6C822lYOISGaQoPvMz1blyqfqADg2akYVgGybpxaTtsEqYBdg0YoRmr6sS0jO0/IunEkW1amEmH5Es+3Z543xFMjxV0SkWqyRkaQ4POqwNuUjRLbvIzYVexHEb3bRtVl6iTpFwgRc4mKpHmEXKnUvvXV8jdujczpA5X+YkLQ+WX237gju0jNrNNyr+wi/+e7buIhqqVtAY9O0EK6aXXzwIDAQAB");
+        aliPayConfig.setKeyPrivate("c8ElOKH2XDlpMDSxu4ix2Q==");
         aliPayConfig.setNotifyUrl("http://www.alipay.com");
         aliPayConfig.setReturnUrl("http://2509d113.all123.net/aliPayBack");
-        aliPayConfig.setSignType(SignUtils.RSA2.name());
-        aliPayConfig.setSeller("2088102175938099");
+        aliPayConfig.setSignType(SignUtils.RSA.name());
+        aliPayConfig.setSeller("2088331023996895");
         aliPayConfig.setInputCharset("utf-8");
-        //是否为测试账号，沙箱环境
-        aliPayConfig.setTest(true);
         //最大连接数
         httpConfig.setMaxTotal(20);
         //默认的每个路由的最大连接数
@@ -78,12 +76,13 @@ public class PayService {
         aliPayService = new AliPayService(aliPayConfig, httpConfig);
 
         //todo 微信配置文件
-        wxPayConfig.setMchId("1473426802");
-        wxPayConfig.setAppid("wx8397f8696b538317");
-        wxPayConfig.setKeyPublic("T6m9iK73b0kn9g5v426MKfHQH7X8rKwb");
-        wxPayConfig.setSecretKey("T6m9iK73b0kn9g5v426MKfHQH7X8rKwb");
-        wxPayConfig.setNotifyUrl("异步通知地址");
-        wxPayConfig.setReturnUrl("同步通知地址");
+        wxPayConfig.setMchId("1520802911");
+        wxPayConfig.setAppid("wx4c0ba224b534431d");
+        //wxPayConfig.setKeyPublic("ea566adfebbd9e2e76440ffc7ea64464");
+        //wxPayConfig.setSecretKey("8e0a59e9a61d7072f745512239fa4286");
+        wxPayConfig.setSecretKey("8e0a59e9a61d7072f745512239fa4286");
+        wxPayConfig.setNotifyUrl("http://fnpcfa.natappfree.cc/pay/wxRechargeCallBack");
+        wxPayConfig.setReturnUrl("http://fnpcfa.natappfree.cc/pay/wxRechargeCallBack");
         wxPayConfig.setSignType(SignUtils.MD5.name());
         wxPayConfig.setInputCharset("utf-8");
         wxPayService = new WxPayService(wxPayConfig);
@@ -171,9 +170,10 @@ public class PayService {
         PayOrder payOrder = new PayOrder("钱包充值", "钱包充值", price, IDUtil.getOrderId(), WxTransactionType.MWEB);
         StringBuffer requestURL = request.getRequestURL();
         //设置网页地址
-        payOrder.setWapUrl(requestURL.substring(0, requestURL.indexOf("/") > 0 ?
-                requestURL.indexOf("/") : requestURL.length()));
-        payOrder.setWapName("钱包充值");
+       // payOrder.setWapUrl(requestURL.substring(0, requestURL.indexOf("/") > 0 ?
+               // requestURL.indexOf("/") : requestURL.length()));
+        //payOrder.setWapName("钱包充值");
+        logger.info("payService{}",wxPayService.getPayConfigStorage().getAppid()+"--"+wxPayService.getPayConfigStorage().getSecretKey()+"--"+wxPayService.getPayConfigStorage().getMchId());
         Map<String, Object> orderInfo = wxPayService.orderInfo(payOrder);
         Bill bill = new Bill();
         bill.setType(1);

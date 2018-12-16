@@ -2,6 +2,7 @@ package com.linghong.companymanager.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
 
@@ -206,5 +207,32 @@ public class Company implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "companyId=" + companyId +
+                ", companyName='" + companyName + '\'' +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                ", password='" + password + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", userName='" + userName + '\'' +
+                ", idCardNumber='" + idCardNumber + '\'' +
+                ", businessScope='" + businessScope + '\'' +
+                ", companyScope='" + companyScope + '\'' +
+                ", companyType='" + companyType + '\'' +
+                ", businessLicense='" + businessLicense + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", introduce='" + introduce + '\'' +
+                ", departments=" + Arrays.toString(departments) +
+                ", auth=" + auth +
+                ", images=" + images +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

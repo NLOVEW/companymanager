@@ -43,9 +43,7 @@ public class PersonTalkMsgService {
                                      String base64Image,
                                      User user,
                                      Company company) {
-        if (base64Image != null) {
-            personTalkMsg.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(base64Image));
-        }
+
         if (user != null && user.getAuth()) {
             personTalkMsg.setFromUser(user);
         } else if (company != null && company.getAuth()){
@@ -53,9 +51,18 @@ public class PersonTalkMsgService {
         }else {
             return false;
         }
+        if (base64Image != null) {
+            String[] split = base64Image.split("。");
+            for (String imagePath : split) {
+                logger.info("split:{}",imagePath);
+                personTalkMsg.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(imagePath));
+            }
+        }
         personTalkMsg.setPersonTalkMsgId(IDUtil.getId());
         personTalkMsg.setPushTime(new Date());
+        logger.info("personTalk:{}",personTalkMsg.toString());
         personTalkMsgRepository.save(personTalkMsg);
+        logger.info("上传成功");
         return true;
     }
 
@@ -92,7 +99,11 @@ public class PersonTalkMsgService {
             discussMessage.setFromCompany(company);
         }
         if (baseImage != null) {
-            discussMessage.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(baseImage));
+            String[] split = baseImage.split("。");
+            for (String imagePath : split) {
+                logger.info("split:{}",imagePath);
+                discussMessage.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(imagePath));
+            }
         }
         if (discussMessage.getDiscussMessageId() != null) {
             DiscussMessage target = discussMessageRepository.findById(discussMessage.getDiscussMessageId()).get();
@@ -107,6 +118,7 @@ public class PersonTalkMsgService {
         PersonTalkMsg personTalkMsg = personTalkMsgRepository.findById(personTalkMsgId).get();
         Set<DiscussMessage> discussMessages = personTalkMsg.getDiscussMessages();
         discussMessages.add(discussMessage);
+        personTalkMsg.setDiscussMessages(discussMessages);
         return true;
     }
 
@@ -175,9 +187,9 @@ public class PersonTalkMsgService {
                     billRepository.save(companyBill);
                     billRepository.save(bill);
                 }
-                personTalkMsgOrderRepository.save(personTalkMsgOrder);
-                return true;
             }
+            personTalkMsgOrderRepository.save(personTalkMsgOrder);
+            return true;
         }
         return false;
     }
@@ -236,7 +248,7 @@ public class PersonTalkMsgService {
             }
             return true;
         }
-        return false;
+        return true;
     }
 
     public List<PersonTalkMsgOrder> getApplyOrder(User user, Company company) {
@@ -251,5 +263,11 @@ public class PersonTalkMsgService {
 
     public List<PersonTalkMsg> getAllPersonTalkMsg() {
         return personTalkMsgRepository.findAll();
+    }
+
+    public boolean deletePersonTalkMsgById(String personTalkMsgId) {
+        PersonTalkMsg personTalkMsg = personTalkMsgRepository.findById(personTalkMsgId).get();
+        personTalkMsgRepository.delete(personTalkMsg);
+        return true;
     }
 }

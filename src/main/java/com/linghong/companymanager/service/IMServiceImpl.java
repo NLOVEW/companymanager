@@ -22,8 +22,8 @@ import java.util.Map;
 
 @Service("imServiceImpl")
 public class IMServiceImpl {
-    private String appKey = "65d982d7d8714b64b7a5f65e341ce50e";
-    private String appSecret = "e962667d1fea";
+    private String appKey = "905d0cf8d05add6716c1cbafd870cc1d";
+    private String appSecret = "00e4d7d46684";
     private String url;
     private IMDaoImpl dao = new IMDaoImpl();
 

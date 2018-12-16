@@ -6,6 +6,7 @@ import com.linghong.companymanager.pojo.PublicizeVideo;
 import com.linghong.companymanager.service.PublicizeVideoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +37,17 @@ public class PublicizeVideoController {
      * @return
      */
     @ApiOperation(value = "上传企业宣传视频")
-    @ApiImplicitParam(name = "video",value = "file 类型",required = true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "video",value = "file 类型",required = true),
+            @ApiImplicitParam(name = "title",value = "标题",required = true),
+            @ApiImplicitParam(name = "introduce",value = "简介",required = true)
+    })
     @PostMapping("/video/pushVideo")
-    public Response pushVideoByCompany(MultipartFile video, HttpServletRequest request){
+    public Response pushVideoByCompany(MultipartFile video,
+                                       PublicizeVideo publicizeVideo,
+                                       HttpServletRequest request){
         Company company = (Company) request.getSession().getAttribute("company");
-        boolean flag = publicizeVideoService.pushVideoByCompany(company,video);
+        boolean flag = publicizeVideoService.pushVideoByCompany(company,video,publicizeVideo);
         if (flag){
             return new Response(true,200 ,null ,"上传成功" );
         }

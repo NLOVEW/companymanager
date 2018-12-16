@@ -8,7 +8,7 @@ import com.linghong.companymanager.pojo.User;
 import com.linghong.companymanager.repository.CompanyRepository;
 import com.linghong.companymanager.repository.CompanyTutorRepository;
 import com.linghong.companymanager.repository.DiscussMessageRepository;
-import com.linghong.companymanager.utils.BeanUtil;
+import com.linghong.companymanager.repository.UserRepository;
 import com.linghong.companymanager.utils.FastDfsUtil;
 import com.linghong.companymanager.utils.IDUtil;
 import org.slf4j.Logger;
@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,47 +37,82 @@ public class CompanyTutorService {
     private CompanyRepository companyRepository;
     @Resource
     private DiscussMessageRepository discussMessageRepository;
+    @Resource
+    private UserRepository userRepository;
 
     @RabbitListener(queues = "companyTutor")
-    private void handlerCompanyTutorByRabbitMq(Long companyId){
-        logger.info("接收到rabbitMq发布的CompanyId:"+companyId);
+    private void handlerCompanyTutorByRabbitMq(Long companyId) {
+        logger.info("接收到rabbitMq发布的CompanyId:" + companyId);
         Company company = companyRepository.findById(companyId).get();
         CompanyTutor companyTutor = new CompanyTutor();
         companyTutor.setCompanyTutorId(IDUtil.getId());
-        companyTutor.setMessage(company.getBusinessScope()+"/"+company.getCompanyScope());
+        companyTutor.setMessage(company.getBusinessScope() + "/" + company.getCompanyScope());
         companyTutor.setType(company.getCompanyType());
         companyTutor.setTitle(company.getCompanyName());
         companyTutor.setPushTime(new Date());
+        companyTutor.setTutorCompany(company);
         companyTutor = companyTutorRepository.save(companyTutor);
-        logger.info("发布公司帮手成功"+companyTutor.toString());
+        logger.info("发布公司帮手成功" + companyTutor.toString());
     }
 
     public boolean pushCompanyTutor(CompanyTutor companyTutor, Company company) {
-        CompanyTutor target = companyTutorRepository.findAllByTutorCompany_CompanyId(company.getCompanyId());
-        BeanUtil.copyPropertiesIgnoreNull(companyTutor,target );
+        companyTutor.setTutorCompany(company);
+        companyTutor.setCompanyTutorId(IDUtil.getId());
+        companyTutorRepository.save(companyTutor);
         return true;
     }
 
-    public List<CompanyTutor> getCompanyTutorByCompanyType(String city,String type) {
+    public List<CompanyTutor> getCompanyTutorByCompanyType(String city, String type) {
         try {
-            Specification<CompanyTutor> specification = (root,query,builder)->{
-                Predicate title = builder.like(root.get("title").as(String.class), "%"+type+"%");
+            Specification<CompanyTutor> specification = (root, query, builder) -> {
+                Predicate title = builder.like(root.get("title").as(String.class), "%" + type + "%");
                 Predicate type1 = builder.like(root.get("type").as(String.class), "%" + type + "%");
                 Predicate message = builder.like(root.get("message").as(String.class), "%" + type + "%");
                 Predicate predicate = builder.or(title, type1, message);
                 return predicate;
             };
             List<CompanyTutor> tutors = companyTutorRepository.findAll(specification);
-            if (city != null){
+            if (city != null) {
                 tutors = tutors.stream().filter(companyTutor -> {
-                    if (companyTutor.getTutorCompany().getAddress().contains(city)){
+                    if (companyTutor.getTutorCompany().getAddress().contains(city)) {
                         return true;
                     }
                     return false;
                 }).collect(Collectors.toList());
             }
             return tutors;
-        }catch (Exception e){
+        } catch (Exception e) {
+            logger.error("------解码出错------");
+        }
+        return null;
+    }
+
+
+    public Map<String,List<User>> getLaw(String city) {
+        try {
+            Specification<CompanyTutor> specification = (root, query, builder) -> {
+                Predicate title = builder.like(root.get("title").as(String.class), "%法律%");
+                Predicate type1 = builder.like(root.get("type").as(String.class), "%法律%");
+                Predicate message = builder.like(root.get("message").as(String.class), "%法律%");
+                Predicate predicate = builder.or(title, type1, message);
+                return predicate;
+            };
+            List<CompanyTutor> tutors = companyTutorRepository.findAll(specification);
+            if (city != null) {
+                tutors = tutors.stream().filter(companyTutor -> {
+                    if (companyTutor.getTutorCompany().getAddress().contains(city)) {
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+            }
+            Map<String,List<User>> result = new HashMap<>();
+            tutors.stream().forEach(tu->{
+                List<User> all = userRepository.findAllByFromCompany_CompanyId(tu.getTutorCompany().getCompanyId());
+                result.put(tu.getTutorCompany().getCompanyName(), all);
+            });
+            return result;
+        } catch (Exception e) {
             logger.error("------解码出错------");
         }
         return null;
@@ -111,6 +144,7 @@ public class CompanyTutorService {
         CompanyTutor companyTutor = companyTutorRepository.findById(companyTutorId).get();
         Set<DiscussMessage> discussMessages = companyTutor.getDiscussMessages();
         discussMessages.add(discussMessage);
+        companyTutor.setDiscussMessages(discussMessages);
         return true;
     }
 }

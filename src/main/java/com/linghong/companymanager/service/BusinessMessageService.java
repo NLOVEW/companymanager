@@ -177,8 +177,12 @@ public class BusinessMessageService {
         }
         discussMessages.add(discussMessage);
         businessMessage.setDiscussMessages(discussMessages);
+        businessMessageRepository.save(businessMessage);
         return true;
     }
 
 
+    public List<BusinessMessage> getAllBusinessMessage() {
+        return businessMessageRepository.findAll();
+    }
 }

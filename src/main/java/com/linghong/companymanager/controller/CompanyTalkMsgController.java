@@ -42,12 +42,12 @@ public class CompanyTalkMsgController {
     })
     @PostMapping("/companyTalkMsg/pushCompanyTalkMsg")
     public Response pushCompanyTalkMsg(CompanyTalkMsg companyTalkMsg,
-                                       @RequestParam(required = false) String base64Image,
+                                       @RequestParam(required = false) String base64Images,
                                        HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         Company company = (Company) session.getAttribute("company");
-        boolean flag = companyTalkMsgService.pushPersonTalkMsg(companyTalkMsg, base64Image, user, company);
+        boolean flag = companyTalkMsgService.pushPersonTalkMsg(companyTalkMsg, base64Images, user, company);
         if (flag) {
             return new Response(true, 200, null, "成功发布");
         }
@@ -214,6 +214,21 @@ public class CompanyTalkMsgController {
         Company company = (Company) session.getAttribute("company");
         List<CompanyTalkMsgOrder> companyTalkMsgOrders = companyTalkMsgService.getApplyOrder(user,company);
         return new Response(true,200 ,companyTalkMsgOrders ,"查询结果" );
+    }
+
+    /**
+     * 逻辑删除
+     * @param companyTalkMsgId
+     * @return
+     */
+    @ApiOperation(value = "删除")
+    @DeleteMapping("/companyTalkMsg/deleteCompanyTalkMsg/{companyTalkMsgId}")
+    public Response deleteCompanyTalkMsg(@PathVariable String companyTalkMsgId){
+        boolean flag = companyTalkMsgService.deleteCompanyTalkMsg(companyTalkMsgId);
+        if (flag){
+            return new Response(true,200 , null,"删除成功" );
+        }
+        return new Response(false,101 , null,"删除失败" );
     }
 
 }

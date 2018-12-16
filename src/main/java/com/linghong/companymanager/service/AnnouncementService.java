@@ -41,4 +41,10 @@ public class AnnouncementService {
         Announcement announcement = announcementRepository.findById(announcementId).get();
         return announcement;
     }
+
+    public boolean deleteAnnouncementByAnnouncementId(String announcementId) {
+        Announcement announcement = announcementRepository.findById(announcementId).get();
+        announcementRepository.delete(announcement);
+        return true;
+    }
 }

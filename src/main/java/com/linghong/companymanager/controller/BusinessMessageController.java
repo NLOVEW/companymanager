@@ -111,4 +111,15 @@ public class BusinessMessageController {
         }
         return new Response(false, 101, null,"请重试" );
     }
+
+    /**
+     * 获取所有公司的行业信息
+     * @return
+     */
+    @ApiOperation(value = "获取所有公司的行业信息")
+    @GetMapping("/businessMessage/getAllBusinessMessage")
+    public Response getAllBusinessMessage(){
+        List<BusinessMessage> businessMessages = businessMessageService.getAllBusinessMessage();
+        return new Response(true, 200, businessMessages,"数据" );
+    }
 }

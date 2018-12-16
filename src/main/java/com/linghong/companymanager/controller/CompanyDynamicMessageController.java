@@ -100,12 +100,12 @@ public class CompanyDynamicMessageController {
     @PostMapping("/companyDynamicMessage/pushDiscussMessage")
     public Response pushDiscussMessage(DiscussMessage discussMessage,
                                        String dynamicMessageId,
-                                       @RequestParam(required = false) String baseImage,
+                                       @RequestParam(required = false) String base64Image,
                                        HttpServletRequest request){
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         Company company = (Company) session.getAttribute("company");
-        boolean flag = companyDynamicMessageService.pushDiscussMessage(discussMessage,dynamicMessageId,baseImage,user,company);
+        boolean flag = companyDynamicMessageService.pushDiscussMessage(discussMessage,dynamicMessageId,base64Image,user,company);
         if (flag){
             return new Response(true,200 ,null ,"评论/回复成功" );
         }

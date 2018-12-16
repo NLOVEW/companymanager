@@ -21,6 +21,8 @@ public class User implements Serializable {
     private String email;//邮箱
     private String avatar;//头像
     private String sex;//性别
+    private String address;
+    private String sign;
     private String id; //此ID可用可不用
     private Date workTime;//在职时间
     private Boolean status;//是否在职
@@ -200,5 +202,49 @@ public class User implements Serializable {
 
     public void setBusinessTarget(String businessTarget) {
         this.businessTarget = businessTarget;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", mobilePhone='" + mobilePhone + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", sex='" + sex + '\'' +
+                ", address='" + address + '\'' +
+                ", sign='" + sign + '\'' +
+                ", id='" + id + '\'' +
+                ", workTime=" + workTime +
+                ", status=" + status +
+                ", department='" + department + '\'' +
+                ", position='" + position + '\'' +
+                ", idCardNumber='" + idCardNumber + '\'' +
+                ", idCardPath='" + idCardPath + '\'' +
+                ", businessTarget='" + businessTarget + '\'' +
+                ", auth=" + auth +
+                ", fromCompany=" + fromCompany +
+                ", openUser=" + openUser +
+                ", createTime=" + createTime +
+                '}';
     }
 }

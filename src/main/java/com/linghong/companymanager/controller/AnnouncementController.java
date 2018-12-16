@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -75,5 +72,15 @@ public class AnnouncementController {
     public Response getAnnouncementByAnnouncementId(@PathVariable String announcementId){
         Announcement announcement = announcementService.getAnnouncementByAnnouncementId(announcementId);
         return new Response(true,200, announcement, "公告详细信息");
+    }
+
+    @ApiOperation(value = "删除")
+    @DeleteMapping("/announcement/deleteAnnouncementByAnnouncementId/{announcementId}")
+    public Response deleteAnnouncementByAnnouncementId(@PathVariable String announcementId){
+        boolean flag = announcementService.deleteAnnouncementByAnnouncementId(announcementId);
+        if (flag){
+            return new Response(true,200 , null,"删除成功" );
+        }
+        return new Response(false,101 , null,"删除失败" );
     }
 }

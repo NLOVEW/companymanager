@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: luck_nhb
@@ -72,6 +73,22 @@ public class CompanyTutorController {
         List<CompanyTutor> companyTutors = companyTutorService.getCompanyTutorByCompanyType(city,type);
         return new Response(true,200 ,companyTutors ,"检索结果" );
     }
+
+
+    /**
+     * 根据公司类型 查找公司帮手信息
+     * @return
+     */
+    @ApiOperation(value = "查找法律咨询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "city",value = "城市",required = true),
+    })
+    @PostMapping("/companyTutor/getLaw")
+    public Response getLaw(@RequestParam(required = false) String city){
+        Map<String,List<User>> users = companyTutorService.getLaw(city);
+        return new Response(true,200 ,users ,"检索结果" );
+    }
+
 
     /**
      * 对某个公司助手信息进行评论或者回复

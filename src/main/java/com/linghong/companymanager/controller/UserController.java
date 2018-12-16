@@ -7,10 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +55,7 @@ public class UserController {
             @ApiImplicitParam(name = "mobilePhone",value = "手机号",required = true),
             @ApiImplicitParam(name = "password",value = "密码",required = true),
     })
-    @PostMapping("/user/login")
+    @RequestMapping("/user/login")
     public Response login(User user, HttpServletRequest request) {
         user = userService.login(user);
         if (user != null){
@@ -98,19 +95,46 @@ public class UserController {
     @ApiOperation(value = "完善个人信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName",value = "用户名",required = true),
-            @ApiImplicitParam(name = "nickName",value = "昵称",required = true),
-            @ApiImplicitParam(name = "email",value = "邮箱",required = true),
-            @ApiImplicitParam(name = "sex",value = "性别",required = true),
-            @ApiImplicitParam(name = "position",value = "职位",required = true),
-            @ApiImplicitParam(name = "department",value = "部门",required = true),
-            @ApiImplicitParam(name = "companyId",value = "所属公司ID",required = true)
+            @ApiImplicitParam(name = "workTime",value = "入职时间 时间戳",required = true),
+            @ApiImplicitParam(name = "idCardImage",value = "身份证  只要一张",required = true),
+            @ApiImplicitParam(name = "companyId",value = "所属公司ID",required = true),
+            @ApiImplicitParam(name = "idCardNumber",value = "身份证号",required = true),
+            @ApiImplicitParam(name = "avatarImage",value = "头像",required = true)
     })
     @PostMapping("/user/perfectUserMessage")
     public Response perfectUserMessage(User user,
                                        Long companyId,
+                                       String idCardImage,
+                                       @RequestParam(required = false) String avatarImage,
                                        HttpServletRequest request){
         User sessionUser = (User) request.getSession().getAttribute("user");
-        user = userService.perfectUserMessage(user,companyId,sessionUser);
+        user = userService.perfectUserMessage(user,companyId,idCardImage,avatarImage,sessionUser);
+        if (user != null){
+            request.getSession().setAttribute("user",user );
+            return new Response(true,200 , null, "完善成功");
+        }
+        return new Response(false,101 ,null ,"请重新完善" );
+    }
+
+    /**
+     * 上传信息
+     * @param user
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "补  信息上传")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "position",value = "职位",required = true),
+            @ApiImplicitParam(name = "id",value = "ID",required = true),
+            @ApiImplicitParam(name = "nickName",value = "昵称",required = true),
+            @ApiImplicitParam(name = "sex",value = "性别",required = true),
+            @ApiImplicitParam(name = "address",value = "地区",required = true),
+            @ApiImplicitParam(name = "sign",value = "签名",required = true)
+    })
+    @PostMapping("/user/updateMessage")
+    public Response updateMessage(User user,HttpServletRequest request){
+        User sessionUser = (User) request.getSession().getAttribute("user");
+        user = userService.updateMessage(user,sessionUser);
         if (user != null){
             request.getSession().setAttribute("user",user );
             return new Response(true,200 , null, "完善成功");
@@ -166,7 +190,7 @@ public class UserController {
      * @param target
      * @return
      */
-    @ApiOperation(value = "完善个人信息")
+    @ApiOperation(value = "添加业务目标")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId",value = "用户名Id",required = true),
             @ApiImplicitParam(name = "target",value = "目标",required = true)

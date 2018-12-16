@@ -43,12 +43,12 @@ public class PersonTalkMsgController {
     })
     @PostMapping("/personTalkMsg/pushPersonTalkMsg")
     public Response pushPersonTalkMsg(PersonTalkMsg personTalkMsg,
-                                      @RequestParam(required = false) String base64Image,
+                                      @RequestParam(required = false) String base64Images,
                                       HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         Company company = (Company) session.getAttribute("company");
-        boolean flag = personTalkMsgService.pushPersonTalkMsg(personTalkMsg, base64Image, user, company);
+        boolean flag = personTalkMsgService.pushPersonTalkMsg(personTalkMsg, base64Images, user, company);
         if (flag) {
             return new Response(true, 200, null, "成功发布");
         }
@@ -190,7 +190,7 @@ public class PersonTalkMsgController {
      */
     @ApiOperation(value = "拒绝或者同意报名申请")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "personTalkMsgId",value = "人脉信息Id",required = true),
+            @ApiImplicitParam(name = "personTalkMsgOrderId",value = "人脉订单Id",required = true),
             @ApiImplicitParam(name = "status",value = "1同意  2拒绝",required = true)
     })
     @PostMapping("/personTalkMsg/dealSignUpOrder")
@@ -216,5 +216,20 @@ public class PersonTalkMsgController {
         Company company = (Company) session.getAttribute("company");
         List<PersonTalkMsgOrder> personTalkMsgOrders = personTalkMsgService.getApplyOrder(user,company);
         return new Response(true,200 ,personTalkMsgOrders ,"查询结果" );
+    }
+
+    /**
+     * 删除
+     * @param personTalkMsgId
+     * @return
+     */
+    @ApiOperation(value = "删除")
+    @DeleteMapping("/personTalkMsg/deletePersonTalkMsgById/{personTalkMsgId}")
+    public Response deletePersonTalkMsgById(@PathVariable String personTalkMsgId){
+        boolean flag = personTalkMsgService.deletePersonTalkMsgById(personTalkMsgId);
+        if (flag){
+            return new Response(true,200 , null,"删除成功" );
+        }
+        return new Response(false,101 , null,"删除失败" );
     }
 }

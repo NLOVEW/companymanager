@@ -1,6 +1,7 @@
 package com.linghong.companymanager.controller;
 
 import com.linghong.companymanager.dto.Response;
+import com.linghong.companymanager.pojo.Company;
 import com.linghong.companymanager.pojo.Customer;
 import com.linghong.companymanager.pojo.User;
 import com.linghong.companymanager.service.CustomerService;
@@ -39,15 +40,18 @@ public class CustomerController {
             @ApiImplicitParam(name = "userName",value = "客户名",required = true),
             @ApiImplicitParam(name = "projectName",value = "项目名",required = true),
             @ApiImplicitParam(name = "projectManager",value = "项目管理人",required = true),
-            @ApiImplicitParam(name = "businessMessage",value = "商业信息",required = true),
-            @ApiImplicitParam(name = "status",value = "状态",required = true),
+            @ApiImplicitParam(name = "businessMessage",value = "客户业务",required = true),
+            @ApiImplicitParam(name = "base64Image",value = "图片",required = true),
+            @ApiImplicitParam(name = "state",value = "状态",required = true),
     })
     @PostMapping("/customer/pushCustomer")
     public Response pushCustomer(Customer customer,
+                                 String state,
                                  @RequestParam(required = false) String base64Image,
                                  HttpServletRequest request) {
+        Company company = (Company) request.getSession().getAttribute("company");
         User user = (User) request.getSession().getAttribute("user");
-        boolean flag = customerService.pushCustomer(user,customer,base64Image);
+        boolean flag = customerService.pushCustomer(company,user,customer,state,base64Image);
         if (flag){
             return new Response(true,200 ,null ,"添加成功" );
         }

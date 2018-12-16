@@ -3,8 +3,10 @@ package com.linghong.companymanager.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.linghong.companymanager.pojo.Company;
 import com.linghong.companymanager.pojo.SendMsg;
 import com.linghong.companymanager.pojo.User;
+import com.linghong.companymanager.repository.CompanyRepository;
 import com.linghong.companymanager.repository.UserRepository;
 import com.linghong.companymanager.service.IMServiceImpl;
 import io.swagger.annotations.Api;
@@ -31,6 +33,8 @@ public class IMController {
 
     @Resource
     private UserRepository userRepository;
+    @Resource
+    private CompanyRepository companyRepository;
     /**
      * 点击我的好友按钮
      */
@@ -39,7 +43,14 @@ public class IMController {
         //创建返回类型
         Map map2 = new HashMap();//map中有本次请求的状态和需要获取的数据
         List list = new ArrayList();//存需要的数据集合
-        String mobilePhone = ((User) request.getSession().getAttribute("user")).getMobilePhone();
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
         try {
             //获取到好友
             JSONObject friend = imServiceImpl.findFriend(mobilePhone);
@@ -114,7 +125,6 @@ public class IMController {
     public JSONObject selectUserOne(String mobilePhone) {
         JSONArray array = new JSONArray();
         array.add(mobilePhone);
-
         try {
             JSONObject jsonObject = imServiceImpl.selectUser(array);
             return jsonObject;
@@ -135,9 +145,16 @@ public class IMController {
      */
     @RequestMapping("/im/addFriend")
     public JSONObject addFriend(String faccid, String type, String msg, HttpServletRequest request) {
-        String accid = ((User) request.getSession().getAttribute("user")).getMobilePhone();
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
         try {
-            return imServiceImpl.addFriend(accid, faccid, type, msg);
+            return imServiceImpl.addFriend(mobilePhone, faccid, type, msg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -155,9 +172,16 @@ public class IMController {
     @RequestMapping("/im/updateFriend")
     public JSONObject updateFriend(String faccid, String alias,
                                    String ex, String serverex, HttpServletRequest request) {
-        String accid = ((User) request.getSession().getAttribute("user")).getMobilePhone();
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
         try {
-            return imServiceImpl.updateFriend(accid, faccid, alias, ex, serverex);
+            return imServiceImpl.updateFriend(mobilePhone, faccid, alias, ex, serverex);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,9 +195,16 @@ public class IMController {
      */
     @RequestMapping("/im/deleteFriend")
     public JSONObject deleteFriend(String faccid, HttpServletRequest request) {
-        String accid = ((User) request.getSession().getAttribute("user")).getMobilePhone();
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
         try {
-            return imServiceImpl.deleteFriend(accid, faccid);
+            return imServiceImpl.deleteFriend(mobilePhone, faccid);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,9 +221,16 @@ public class IMController {
      */
     @RequestMapping("/im/sendMsg")
     public JSONObject sendMsg(SendMsg sendMsg, HttpServletRequest request) {
-        String from = ((User) request.getSession().getAttribute("user")).getMobilePhone();
-        System.out.println(from + "from" + "ope:" + sendMsg.getOpe());
-        sendMsg.setFrom(from);
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
+        System.out.println(mobilePhone + "from" + "ope:" + sendMsg.getOpe());
+        sendMsg.setFrom(mobilePhone);
         String msg = "{'msg':" + sendMsg.getBody() + "}";
         sendMsg.setBody(msg);
         try {
@@ -213,17 +251,24 @@ public class IMController {
      */
     @RequestMapping("/im/querySessionMsg")
     public Map querySessionMsg(String to, HttpServletRequest request) {
-        String from = ((User) request.getSession().getAttribute("user")).getMobilePhone();
+        String mobilePhone = null;
+        User user1 = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
+        if (user1 != null){
+            mobilePhone = user1.getMobilePhone();
+        }else {
+            mobilePhone = company.getMobilePhone();
+        }
         String begintime = 0 + "";
         String endtime = new Date().getTime() + "";
         String limit = 90 + "";
         try {
             Map map = new HashMap();
-            JSONObject jsonObject1 = imServiceImpl.querySessionMsg(from, to, begintime, endtime, limit);
+            JSONObject jsonObject1 = imServiceImpl.querySessionMsg(mobilePhone, to, begintime, endtime, limit);
             map.put("msg", jsonObject1);
             //获取发送者头像
             JSONArray array = new JSONArray();
-            array.add(from);
+            array.add(mobilePhone);
             JSONObject jsonObject0 = imServiceImpl.selectUser(array);
             logger.info(jsonObject0.toString());
             JSONArray array0 = JSON.parseArray(jsonObject0.get("uinfos").toString());

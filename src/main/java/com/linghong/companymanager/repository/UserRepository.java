@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findAllByFromCompany_CompanyId(@Param("companyId") Long companyId);
     List<User> findAllByDepartmentAndFromCompany_CompanyId(@Param("department") String department,
                                                            @Param("companyId") Long companyId);
+    User findByOpenUser_OpenId(@Param("openId") String openId);
 }

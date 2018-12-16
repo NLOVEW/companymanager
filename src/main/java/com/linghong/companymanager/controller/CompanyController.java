@@ -99,6 +99,25 @@ public class CompanyController {
     }
 
     /**
+     * 公司上传头像
+     * @param base64Avatar
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "公司上传头像")
+    @ApiImplicitParam(name = "base64Avatar",value = "base64编码格式头像",required = true)
+    @PostMapping("/company/uploadAvatar")
+    public Response uploadAvatar(String base64Avatar,
+                                 HttpServletRequest request){
+        Company sessionCompany = (Company) request.getSession().getAttribute("company");
+        boolean flag = companyService.uploadAvatar(base64Avatar,sessionCompany);
+        if (flag){
+            return new Response(true,200 ,null ,"上传成功" );
+        }
+        return new Response(false,101 ,null ,"上传失败" );
+    }
+
+    /**
      * 公司用户 获取当前公司信息
      *
      * @param request
@@ -131,9 +150,9 @@ public class CompanyController {
      * @param key
      * @return
      */
-    @ApiOperation(value = "根据关键字查找公司信息")
+    @ApiOperation(value = "根据关键字查找公司信息、全国查询  根据城市查询  都是此接口  ")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "city",value = "城市名",required = true),
+            @ApiImplicitParam(name = "city",value = "根据城市名查询带上此参数",required = true),
             @ApiImplicitParam(name = "key",value = "关键字",required = true)
     })
     @PostMapping("/company/getCompanyByKey")
@@ -225,4 +244,36 @@ public class CompanyController {
         }
         return new Response(false,101 ,null ,"操作失败" );
     }
+
+    /**
+     * 获取所有的公司信息
+     * @return
+     */
+    @GetMapping("/company/getAllCompany")
+    public Response getAllCompany(){
+        List<Company> companies = companyService.getAllCompany();
+        return new Response(true,200,companies,"公司信息");
+    }
+
+    /**
+     * 找回密码
+     * @param mobilePhone
+     * @param password
+     * @return
+     */
+    @ApiOperation(value = "找回密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "mobilePhone",value = "手机号",required = true),
+            @ApiImplicitParam(name = "password",value = "新密码",required = true),
+    })
+    @PostMapping("/company/findPassword")
+    public Response findPassword(String mobilePhone,String password,HttpServletRequest request){
+        Company company = companyService.findPassword(mobilePhone,password);
+        if (company != null){
+            request.getSession().setAttribute("company",company );
+            return new Response(true,200 ,null ,"已修改密码" );
+        }
+        return new Response(false,101 ,null ,"修改失败，请联系管理员" );
+    }
+
 }

@@ -132,4 +132,22 @@ public class PersonTalkMsg implements Serializable {
     public void setFromCompany(Company fromCompany) {
         this.fromCompany = fromCompany;
     }
+
+    @Override
+    public String toString() {
+        return "PersonTalkMsg{" +
+                "personTalkMsgId='" + personTalkMsgId + '\'' +
+                ", fromUser=" + fromUser +
+                ", fromCompany=" + fromCompany +
+                ", title='" + title + '\'' +
+                ", message='" + message + '\'' +
+                ", price=" + price +
+                ", imagePath='" + imagePath + '\'' +
+                ", lookNumber=" + lookNumber +
+                ", loveNumber=" + loveNumber +
+                ", discussNumber=" + discussNumber +
+                ", discussMessages=" + discussMessages +
+                ", pushTime=" + pushTime +
+                '}';
+    }
 }

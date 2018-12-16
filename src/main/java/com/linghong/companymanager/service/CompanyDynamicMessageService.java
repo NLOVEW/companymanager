@@ -77,12 +77,14 @@ public class CompanyDynamicMessageService {
         CompanyDynamicMessage dynamicMessage = companyDynamicMessageRepository.findById(dynamicMessageId).get();
         Set<DiscussMessage> discussMessages = dynamicMessage.getDiscussMessages();
         discussMessages.add(discussMessage);
+        dynamicMessage.setDiscussMessages(discussMessages);
+        companyDynamicMessageRepository.save(dynamicMessage);
         return true;
     }
 
     public boolean deleteCompanyDynamicMessage(String dynamicMessageId) {
         CompanyDynamicMessage dynamicMessage = companyDynamicMessageRepository.findById(dynamicMessageId).get();
-        dynamicMessage.setObtained(true);
+        companyDynamicMessageRepository.delete(dynamicMessage);
         return true;
     }
 }

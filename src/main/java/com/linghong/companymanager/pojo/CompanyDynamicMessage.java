@@ -75,7 +75,7 @@ public class CompanyDynamicMessage implements Serializable {
         this.pushTime = pushTime;
     }
 
-    @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "dynamicMessageId")
     public Set<DiscussMessage> getDiscussMessages() {
         return discussMessages;

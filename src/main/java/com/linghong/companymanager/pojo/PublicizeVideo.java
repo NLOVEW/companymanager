@@ -15,6 +15,8 @@ import java.util.Date;
 public class PublicizeVideo implements Serializable {
     private String publicizeVideoId;
     private Company fromCompany;
+    private String title;
+    private String introduce;
     private String videoPath;
     private Date pushTime;
 
@@ -52,5 +54,21 @@ public class PublicizeVideo implements Serializable {
 
     public void setFromCompany(Company fromCompany) {
         this.fromCompany = fromCompany;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 }

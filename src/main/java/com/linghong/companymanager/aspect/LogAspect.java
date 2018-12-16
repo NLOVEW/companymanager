@@ -1,6 +1,7 @@
 package com.linghong.companymanager.aspect;
 
 
+import com.linghong.companymanager.pojo.Company;
 import com.linghong.companymanager.pojo.User;
 import com.linghong.companymanager.utils.DateUtil;
 import com.linghong.companymanager.utils.IPUtil;
@@ -34,8 +35,12 @@ public class LogAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         User user = (User) request.getSession().getAttribute("user");
+        Company company = (Company) request.getSession().getAttribute("company");
         if (user != null) {
-            logger.info("{} IP地址:{} 在{}请求 url = {} ", user.getMobilePhone(), IPUtil.getIpAddress(request), DateUtil.date2SimpleDate(new Date()), request.getRequestURL());
+            logger.info("员工：{} IP地址:{} 在{}请求 url = {} ", user.getMobilePhone(), IPUtil.getIpAddress(request), DateUtil.date2SimpleDate(new Date()), request.getRequestURL());
+            return;
+        }else if (company != null){
+            logger.info("企业：{} IP地址:{} 在{}请求 url = {} ", company.getMobilePhone(), IPUtil.getIpAddress(request), DateUtil.date2SimpleDate(new Date()), request.getRequestURL());
             return;
         }
         logger.info("url = {} 在{} 被匿名访问 IP地址:{}", request.getRequestURL(), DateUtil.date2SimpleDate(new Date()),IPUtil.getIpAddress(request));

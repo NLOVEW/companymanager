@@ -1,10 +1,7 @@
 package com.linghong.companymanager.service;
 
 import com.linghong.companymanager.constant.UrlConstant;
-import com.linghong.companymanager.pojo.Company;
-import com.linghong.companymanager.pojo.Image;
-import com.linghong.companymanager.pojo.User;
-import com.linghong.companymanager.pojo.Wallet;
+import com.linghong.companymanager.pojo.*;
 import com.linghong.companymanager.repository.CompanyRepository;
 import com.linghong.companymanager.repository.UserRepository;
 import com.linghong.companymanager.utils.BeanUtil;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +39,8 @@ public class CompanyService {
     private UserRepository userRepository;
     @Resource
     private AmqpTemplate amqpTemplate;
+    @Resource
+    private IMServiceImpl imServiceImpl;
 
     public Company register(Company company) {
         Company target = companyRepository.findByMobilePhone(company.getMobilePhone());
@@ -53,6 +51,20 @@ public class CompanyService {
         company.setPassword(MD5Util.md5(company.getPassword()));
         company.setAuth(false);
         company = companyRepository.save(company);
+        String mobilePhone = company.getMobilePhone();
+        new Thread(
+                ()->{
+                    try {
+                        //注册即时通信
+                        CreateUser createUser = new CreateUser();
+                        //使用手机号当唯一值
+                        createUser.setAccid(mobilePhone);
+                        imServiceImpl.createUser(createUser);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        ).start();
         if (company.getCompanyId() != null) {
             Wallet wallet = new Wallet();
             wallet.setCompany(company);
@@ -69,7 +81,9 @@ public class CompanyService {
                                       String base64Avatar,
                                       String base64BusinessLicense,
                                       String base64Images) {
+        logger.info("上传："+company.toString());
         sessionCompany = companyRepository.findById(sessionCompany.getCompanyId()).get();
+        logger.info("数据库："+sessionCompany.toString());
         if (base64Avatar != null) {
             sessionCompany.setAvatar(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadImage(base64Avatar));
         }
@@ -88,6 +102,7 @@ public class CompanyService {
             sessionCompany.setImages(images);
         }
         BeanUtil.copyPropertiesIgnoreNull(company, sessionCompany);
+        companyRepository.save(sessionCompany);
         //信息完善后自动发布公司的业务到市场
         amqpTemplate.convertSendAndReceive("companyTutor", sessionCompany.getCompanyId());
         return sessionCompany;
@@ -113,11 +128,10 @@ public class CompanyService {
                 Predicate predicate = builder.or(companyName, userName, businessScope, companyScope, companyType);
                 return predicate;
             };
-            String newCity = URLDecoder.decode(city, "UTF-8");
             List<Company> companies = companyRepository.findAll(specification);
             if (city != null) {
                 companies = companies.stream().filter(company -> {
-                    if (company.getAuth() && company.getAddress().contains(newCity)) {
+                    if (company.getAuth() && company.getAddress().contains(city)) {
                         return true;
                     }
                     return false;
@@ -133,12 +147,20 @@ public class CompanyService {
     public boolean pushDepartments(String department, Company company) {
         company = companyRepository.findById(company.getCompanyId()).get();
         String[] departments = company.getDepartments();
-        String[] target = new String[department.length() + 1];
-        for (int i = 0; i < departments.length; i++) {
-            target[i] = departments[i];
+        String[] target = null;
+        if (departments != null && departments.length > 0){
+            target = new String[departments.length + 1];
+            for (int i = 0; i < departments.length; i++) {
+                target[i] = departments[i];
+            }
+            target[departments.length] = department;
+        }else {
+            target = new String[1];
+            target[0] = department;
         }
-        target[departments.length] = department;
         company.setDepartments(target);
+        companyRepository.save(company);
+        logger.info("添加部门后："+company.toString());
         return true;
     }
 
@@ -176,5 +198,22 @@ public class CompanyService {
             return company1;
         }
         return null;
+    }
+
+    public boolean uploadAvatar(String base64Avatar, Company sessionCompany) {
+        sessionCompany = companyRepository.findById(sessionCompany.getCompanyId()).get();
+        sessionCompany.setAvatar(UrlConstant.IMAGE_URL+new FastDfsUtil().uploadBase64Image(base64Avatar));
+        return true;
+    }
+
+    public List<Company> getAllCompany() {
+        return companyRepository.findAll();
+    }
+
+    public Company findPassword(String mobilePhone, String password) {
+        Company company = companyRepository.findByMobilePhone(mobilePhone);
+        company.setPassword(MD5Util.md5(password));
+        companyRepository.save(company);
+        return company;
     }
 }

@@ -73,6 +73,8 @@ public class MessageBack implements Serializable {
         this.pushTime = pushTime;
     }
 
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "fromCompanyId")
     public Company getFromCompany() {
         return fromCompany;
     }

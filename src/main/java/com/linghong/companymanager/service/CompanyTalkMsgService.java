@@ -40,15 +40,21 @@ public class CompanyTalkMsgService {
                                      String base64Image,
                                      User user,
                                      Company company) {
-        if (base64Image != null) {
-            companyTalkMsg.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(base64Image));
-        }
         if (user != null && user.getAuth()) {
             companyTalkMsg.setFromUser(user);
+            logger.info("auth:{}",user.getAuth());
         } else if (company != null && company.getAuth()){
             companyTalkMsg.setFromCompany(company);
+            logger.info("auth:{}",company.getAuth());
         }else {
             return false;
+        }
+        if (base64Image != null) {
+            String[] split = base64Image.split("。");
+            for (String imagePath : split) {
+                logger.info("split:{}",imagePath);
+                companyTalkMsg.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(imagePath));
+            }
         }
         companyTalkMsg.setCompanyTalkMsgId(IDUtil.getId());
         companyTalkMsg.setPushTime(new Date());
@@ -88,7 +94,11 @@ public class CompanyTalkMsgService {
             discussMessage.setFromCompany(company);
         }
         if (baseImage != null) {
-            discussMessage.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(baseImage));
+            String[] split = baseImage.split("。");
+            for (String imagePath : split) {
+                logger.info("split:{}",imagePath);
+                discussMessage.setImagePath(UrlConstant.IMAGE_URL + new FastDfsUtil().uploadBase64Image(imagePath));
+            }
         }
         if (discussMessage.getDiscussMessageId() != null) {
             DiscussMessage target = discussMessageRepository.findById(discussMessage.getDiscussMessageId()).get();
@@ -103,6 +113,8 @@ public class CompanyTalkMsgService {
         CompanyTalkMsg companyTalkMsg = companyTalkMsgRepository.findById(companyTalkMsgId).get();
         Set<DiscussMessage> discussMessages = companyTalkMsg.getDiscussMessages();
         discussMessages.add(discussMessage);
+        companyTalkMsg.setDiscussMessages(discussMessages);
+        companyTalkMsgRepository.save(companyTalkMsg);
         return true;
     }
 
@@ -245,5 +257,11 @@ public class CompanyTalkMsgService {
             List<CompanyTalkMsgOrder> talkMsgOrders = companyTalkMsgOrderRepository.findAllByFromCompany_CompanyId(company.getCompanyId());
             return talkMsgOrders;
         }
+    }
+
+    public boolean deleteCompanyTalkMsg(String companyTalkMsgId) {
+        CompanyTalkMsg companyTalkMsg = companyTalkMsgRepository.findById(companyTalkMsgId).get();
+        companyTalkMsgRepository.delete(companyTalkMsg);
+        return true;
     }
 }

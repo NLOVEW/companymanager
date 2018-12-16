@@ -37,7 +37,7 @@ public class CompanyTalkMsg implements Serializable {
     }
 
     @OneToOne(cascade = {CascadeType.MERGE})
-    @JoinColumn(name = "companyTalkMsgId")
+    @JoinColumn(name = "fromCompanyId")
     public Company getFromCompany() {
         return fromCompany;
     }

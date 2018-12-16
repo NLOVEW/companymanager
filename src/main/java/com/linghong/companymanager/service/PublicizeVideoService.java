@@ -27,9 +27,8 @@ public class PublicizeVideoService {
     @Resource
     private PublicizeVideoRepository publicizeVideoRepository;
 
-    public boolean pushVideoByCompany(Company company, MultipartFile video) {
+    public boolean pushVideoByCompany(Company company, MultipartFile video,PublicizeVideo publicizeVideo) {
         String url = UrlConstant.IMAGE_URL+new FastDfsUtil().uploadImage(video);
-        PublicizeVideo publicizeVideo = new PublicizeVideo();
         publicizeVideo.setVideoPath(url);
         publicizeVideo.setPushTime(new Date());
         publicizeVideo.setPublicizeVideoId(IDUtil.getId());
