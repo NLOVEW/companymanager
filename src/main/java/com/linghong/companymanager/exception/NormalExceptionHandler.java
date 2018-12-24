@@ -15,14 +15,14 @@ public class NormalExceptionHandler {
 //    @ExceptionHandler({NullPointerException.class})
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
 //    public Response nullPointerException(NullPointerException ex){
-//        return new Response(false,707 , null,"请求参数中有空参数，请重新登录");
+//        return new Response(false,707 , null,"请重新登录");
 //    }
 
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public Response illegalArgumentException(IllegalArgumentException ex){
-//        return new Response(false,708 , null,"请查看参数是否赋值"+ex.getMessage());
-//    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response illegalArgumentException(IllegalArgumentException ex){
+        return new Response(false,708 , null,"请携带相应的请求参数"+ex.getMessage());
+    }
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

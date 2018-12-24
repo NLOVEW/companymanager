@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @Auther: luck_nhb
@@ -35,6 +36,13 @@ public class MessageBackService {
             messageBack.setFromUser(user);
         }else {
             messageBack.setFromCompany(company);
+        }
+        messageBack.setPushTime(new Date());
+        if (messageBack.getMessageType() == null){
+            messageBack.setMessageType("空");
+        }
+        if (messageBack.getMessage() == null){
+            messageBack.setMessage("空");
         }
         messageBackRepository.save(messageBack);
         return true;

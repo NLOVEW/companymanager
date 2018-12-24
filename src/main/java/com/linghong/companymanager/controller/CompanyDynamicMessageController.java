@@ -86,7 +86,7 @@ public class CompanyDynamicMessageController {
      * 参数：message dynamicMessageId baseImage  discussMessageId(如果回复评论请带上次参数)
      * @param discussMessage
      * @param dynamicMessageId
-     * @param baseImage
+     * @param base64Image
      * @param request
      * @return
      */

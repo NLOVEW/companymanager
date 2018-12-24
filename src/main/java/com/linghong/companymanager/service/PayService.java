@@ -81,8 +81,8 @@ public class PayService {
         //wxPayConfig.setKeyPublic("ea566adfebbd9e2e76440ffc7ea64464");
         //wxPayConfig.setSecretKey("8e0a59e9a61d7072f745512239fa4286");
         wxPayConfig.setSecretKey("8e0a59e9a61d7072f745512239fa4286");
-        wxPayConfig.setNotifyUrl("http://fnpcfa.natappfree.cc/pay/wxRechargeCallBack");
-        wxPayConfig.setReturnUrl("http://fnpcfa.natappfree.cc/pay/wxRechargeCallBack");
+        wxPayConfig.setNotifyUrl("http://g9auk5.natappfree.cc/pay/wxRechargeCallBack");
+        wxPayConfig.setReturnUrl("http://g9auk5.natappfree.cc/pay/wxRechargeCallBack");
         wxPayConfig.setSignType(SignUtils.MD5.name());
         wxPayConfig.setInputCharset("utf-8");
         wxPayService = new WxPayService(wxPayConfig);

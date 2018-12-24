@@ -27,7 +27,7 @@ public class BaseService {
         try {
             //todo 上线时更换公司信息
             code = SmsUtil.sendCode("LTAI9F7kNul9FmTl", "pxTseyiiIMmD9JMjanZuvRWI8ttgkB",
-                    "树洞", "SMS_142145653", mobilePhone);
+                    "领弘孵化", "SMS_142145653", mobilePhone);
         } catch (Exception e) {
             logger.error("Error:手机验证码发送超时");
         }

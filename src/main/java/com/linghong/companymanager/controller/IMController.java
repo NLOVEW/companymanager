@@ -64,42 +64,16 @@ public class IMController {
                 //获得账号
                 String string3 = fromObject.get("faccid").toString();
                 User user = userRepository.findByMobilePhone(string3);
-                map.put("user",user );
-                //获得备注名字
-                if (fromObject.get("alias") != null) {
-                    map.put("name", fromObject.get("alias").toString());
-                } else {
-                    map.put("name", null);
-                }
-                //根据手机号查询单个用户获取头像
-                JSONArray array2 = new JSONArray();
-                array2.add(string3);
-                JSONObject jsonObject = imServiceImpl.selectUser(array2);
-                JSONArray array3 = JSON.parseArray(jsonObject.get("uinfos").toString());
-                for (Object object2 : array3) {
-                    JSONObject fromObject2 = (JSONObject) JSON.toJSON(object2);
-                    if (null != fromObject2.get("icon")) {
-                        String touXiang = fromObject2.get("icon").toString();//头像
-                        map.put("avatar", touXiang);
-                    } else {
-                        map.put("avatar", null);
-                    }
-                    if (null != fromObject2.get("name")) {
-                        String niCheng = fromObject2.get("name").toString();//昵称
-                        map.put("userName", niCheng);
-                    } else {
-                        map.put("userName", null);
-                    }
-                    if (null != fromObject2.get("gender")) {
-                        String gender = fromObject2.get("gender").toString();//昵称
-                        if (gender.equals("0")) {
-                            map.put("sax", "未知");
-                        } else if (gender.equals("1")) {
-                            map.put("sax", "男");
-                        } else {
-                            map.put("sax", "女");
-                        }
-                    }
+                Company company1 = companyRepository.findByMobilePhone(string3);
+                if (user != null){
+                    map.put("friendMobilePhone",user.getMobilePhone() );
+                    map.put("friendName",(user.getNickName() == null) ? user.getUserName() :user.getNickName() );
+                    map.put("friendAvar",(user.getAvatar() == null) ? null : user.getAvatar());
+
+                }else {
+                    map.put("friendMobilePhone",company1.getMobilePhone() );
+                    map.put("friendName",(company1.getCompanyName() == null) ? company1.getUserName() :company1.getCompanyName() );
+                    map.put("friendAvar",(company1.getAvatar() == null) ? null : company1.getAvatar());
                 }
                 list.add(map);
             }
@@ -285,16 +259,16 @@ public class IMController {
             JSONArray array2 = new JSONArray();
             array2.add(to);
             JSONObject jsonObject = imServiceImpl.selectUser(array2);
-            JSONArray array3 = JSON.parseArray(jsonObject.get("uinfos").toString());
-            for (Object object2 : array3) {
-                JSONObject fromObject2 = (JSONObject) JSON.toJSON(object2);
-                if (null != fromObject2.get("icon")) {
-                    String touXiang = fromObject2.get("icon").toString();//头像
-                    map.put("toAvatar", touXiang);
-                } else {
-                    map.put("toAvatar", null);
-                }
-            }
+ //           JSONArray array3 = JSON.parseArray(jsonObject.get("uinfos").toString());
+//            for (Object object2 : array3) {
+//                JSONObject fromObject2 = (JSONObject) JSON.toJSON(object2);
+//                if (null != fromObject2.get("icon")) {
+//                    String touXiang = fromObject2.get("icon").toString();//头像
+//                    map.put("toAvatar", touXiang);
+//                } else {
+//                    map.put("toAvatar", null);
+//                }
+//            }
             return map;
         } catch (Exception e) {
             e.printStackTrace();

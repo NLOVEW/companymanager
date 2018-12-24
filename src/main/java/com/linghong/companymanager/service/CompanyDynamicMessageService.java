@@ -71,6 +71,7 @@ public class CompanyDynamicMessageService {
             } else {
                 discussMessage.setToUser(target.getFromUser());
             }
+            discussMessage.setDiscussMessage(target);
         }
         discussMessage.setPushTime(new Date());
         discussMessage.setDiscussMessageId(IDUtil.getId());

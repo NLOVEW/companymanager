@@ -19,6 +19,7 @@ public class DiscussMessage implements Serializable {
     private User fromUser;
     private User toUser;
     private String message;
+    private DiscussMessage discussMessage;
     private String imagePath;
     private Date pushTime;
 
@@ -32,7 +33,7 @@ public class DiscussMessage implements Serializable {
         this.discussMessageId = discussMessageId;
     }
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinColumn(name = "fromCompanyId")
     public Company getFromCompany() {
         return fromCompany;
@@ -42,7 +43,7 @@ public class DiscussMessage implements Serializable {
         this.fromCompany = fromCompany;
     }
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinColumn(name = "toCompanyId")
     public Company getToCompany() {
         return toCompany;
@@ -52,7 +53,7 @@ public class DiscussMessage implements Serializable {
         this.toCompany = toCompany;
     }
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinColumn(name = "fromUserId")
     public User getFromUser() {
         return fromUser;
@@ -62,7 +63,7 @@ public class DiscussMessage implements Serializable {
         this.fromUser = fromUser;
     }
 
-    @OneToOne(cascade = {CascadeType.MERGE})
+    @OneToOne(cascade = {CascadeType.MERGE},fetch = FetchType.EAGER)
     @JoinColumn(name = "toUserId")
     public User getToUser() {
         return toUser;
@@ -94,5 +95,28 @@ public class DiscussMessage implements Serializable {
 
     public void setPushTime(Date pushTime) {
         this.pushTime = pushTime;
+    }
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "fromDiscussMessageId")
+    public DiscussMessage getDiscussMessage() {
+        return discussMessage;
+    }
+
+    public void setDiscussMessage(DiscussMessage discussMessage) {
+        this.discussMessage = discussMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "DiscussMessage{" +
+                "discussMessageId='" + discussMessageId + '\'' +
+                ", fromCompany=" + fromCompany +
+                ", fromUser=" + fromUser +
+                ", message='" + message + '\'' +
+                ", discussMessage=" + discussMessage +
+                ", imagePath='" + imagePath + '\'' +
+                ", pushTime=" + pushTime +
+                '}';
     }
 }

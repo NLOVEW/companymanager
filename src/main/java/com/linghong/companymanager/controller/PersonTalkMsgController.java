@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: luck_nhb
@@ -214,7 +215,7 @@ public class PersonTalkMsgController {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         Company company = (Company) session.getAttribute("company");
-        List<PersonTalkMsgOrder> personTalkMsgOrders = personTalkMsgService.getApplyOrder(user,company);
+        Map<String, List<PersonTalkMsgOrder>> personTalkMsgOrders = personTalkMsgService.getApplyOrder(user,company);
         return new Response(true,200 ,personTalkMsgOrders ,"查询结果" );
     }
 

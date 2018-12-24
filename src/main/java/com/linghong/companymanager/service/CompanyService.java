@@ -180,7 +180,12 @@ public class CompanyService {
 
     public List<User> getAuthUser(Company company) {
         List<User> users = userRepository.findAllByFromCompany_CompanyId(company.getCompanyId());
-        users = users.stream().filter(User::getAuth).collect(Collectors.toList());
+        users = users.stream().filter(user -> {
+            if (user.getAuth() == null){
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
         return users;
     }
 
@@ -188,7 +193,10 @@ public class CompanyService {
         User user = userRepository.findById(userId).get();
         if (status.equals(1)){
             user.setAuth(true);
+        }else{
+            user.setAuth(false);
         }
+        userRepository.save(user);
         return true;
     }
 

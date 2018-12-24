@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -251,13 +252,31 @@ public class PersonTalkMsgService {
         return true;
     }
 
-    public List<PersonTalkMsgOrder> getApplyOrder(User user, Company company) {
+    public Map<String, List<PersonTalkMsgOrder>> getApplyOrder(User user, Company company) {
         if (user != null) {
             List<PersonTalkMsgOrder> talkMsgOrders = personTalkMsgOrderRepository.findAllByFromUser_UserId(user.getUserId());
-            return talkMsgOrders;
+            Map<String, List<PersonTalkMsgOrder>> collect = talkMsgOrders.stream().collect(Collectors.groupingBy(personTalkMsgOrder -> {
+                if (personTalkMsgOrder.getStatus().equals(0)) {
+                    return "已报名";
+                } else if (personTalkMsgOrder.getStatus().equals(1)) {
+                    return "报名成功";
+                } else {
+                    return "拒绝报名";
+                }
+            }));
+            return collect;
         } else {
             List<PersonTalkMsgOrder> talkMsgOrders = personTalkMsgOrderRepository.findAllByFromCompany_CompanyId(company.getCompanyId());
-            return talkMsgOrders;
+            Map<String, List<PersonTalkMsgOrder>> collect = talkMsgOrders.stream().collect(Collectors.groupingBy(personTalkMsgOrder -> {
+                if (personTalkMsgOrder.getStatus().equals(0)) {
+                    return "已报名";
+                } else if (personTalkMsgOrder.getStatus().equals(1)) {
+                    return "报名成功";
+                } else {
+                    return "拒绝报名";
+                }
+            }));
+            return collect;
         }
     }
 

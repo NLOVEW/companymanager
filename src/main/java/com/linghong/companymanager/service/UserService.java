@@ -97,6 +97,7 @@ public class UserService {
                 salt, 2)
                 .toHex();
         user.setPassword(newPassword);
+        userRepository.save(user);
         return user;
     }
 
@@ -145,7 +146,9 @@ public class UserService {
 
     public User updateMessage(User user, User sessionUser) {
         sessionUser = userRepository.findById(sessionUser.getUserId()).get();
+        logger.info("更新前："+sessionUser.toString());
         BeanUtil.copyPropertiesIgnoreNull(user,sessionUser );
+        logger.info("更新后："+sessionUser.toString());
         userRepository.save(sessionUser);
         return sessionUser;
     }
